@@ -47,7 +47,7 @@ INSERT INTO Project VALUES
 (4, 'Project Delta', 3),
 (5, 'Project Epsilon', 4);
 
--------------------------------------------------------------------answers-----------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------answers-----------------------------------------------------------------------------------------------------------------
 
 1.	Select all columns from the Employee table. 
  SELECT name and salary FROM Employee;
@@ -70,101 +70,95 @@ WHERE department_id = (
     WHERE name = 'IT'
 );
 
-String Matching Queries (5)
-6.	Select employees whose names start with 'J'.
-7.	Select employees whose names end with 'e'.
-8.	Select employees whose names contain 'a'.
-9.	Select employees whose names are exactly 9 characters long.
+6. Employees whose names start with 'J'
+SELECT * FROM Employee
+WHERE name LIKE 'J%';
 
-10.	Select employees whose names have 'o' as the second character.
-Date Queries (5)
-11.	Select employees hired in the year 2020.
+7. Employees whose names end with 'e'
+SELECT * FROM Employee
+WHERE name LIKE '%e';
 
-12.	Select employees hired in January of any year.
+8. Employees whose names contain 'a'
+SELECT * FROM Employee
+WHERE name LIKE '%a%';
 
-13.	Select employees hired before 2019.
-14.	Select employees hired on or after March 1, 2021.
-15.	Select employees hired in the last 2 years.
+9. Employees whose names are exactly 9 characters long
+SELECT * FROM Employee
+WHERE LENGTH(name) = 9;
 
-Aggregate Queries (5)
-16.	Select the total salary of all employees.
-17.	Select the average salary of employees.
+10. Employees whose names have 'o' as second character
+SELECT * FROM Employee
+WHERE name LIKE '_o%';
 
-18.	Select the minimum salary in the Employee table.
-19.	Select the number of employees in each department.
+11. Employees hired in 2020
+SELECT * FROM Employee
+WHERE YEAR(hire_date) = 2020;
 
-20.	Select the average salary of employees in each department.
+12. Employees hired in January
+SELECT * FROM Employee
+WHERE MONTH(hire_date) = 1;
 
-Group By Queries (5)
-21.	Select the total salary for each department.
+13. Employees hired before 2019
+SELECT * FROM Employee
+WHERE hire_date < '2019-01-01';
 
-22.	Select the average age of employees in each department.
+14. Employees hired on or after March 1, 2021
+SELECT * FROM Employee
+WHERE hire_date >= '2021-03-01';
 
-23.	Select the number of employees hired in each year.
-24.	Select the highest salary in each department.
- 
-25.	Select the department with the highest average salary.
+15. Employees hired in the last 2 years
+SELECT * FROM Employee
+WHERE hire_date >= DATE_SUB(CURDATE(), INTERVAL 2 YEAR);
 
-Having Queries (5)
-26.	Select departments with more than 2 employees.
-27.	Select departments with an average salary greater than 55000.
-28.	Select years with more than 1 employee hired.
-29.	Select departments with a total salary expense less than 100000.
-30.	Select departments with the maximum salary above 75000.
+16. Total salary of all employees
+SELECT SUM(salary) AS total_salary
+FROM Employee;
 
-Order By Queries (5)
-31.	Select all employees ordered by their salary in ascending order.
-32.	Select all employees ordered by their age in descending order.
-33.	Select all employees ordered by their hire date in ascending order.
-34.	Select employees ordered by their department and then by their salary.
-35.	Select departments ordered by the total salary of their employees.
+17. Average salary of employees
+SELECT AVG(salary) AS average_salary
+FROM Employee;
 
-Join Queries (10)
+18. Minimum salary
+SELECT MIN(salary) AS minimum_salary
+FROM Employee;
 
-36.	Select employee names along with their department names.
-37.	Select project names along with the department names they belong to.
-38.	Select employee names and their corresponding project names.
-39.	Select all employees and their departments, including those without a department.
-40.	Select all departments and their employees, including departments without employees.
-41.	Select employees who are not assigned to any project.
+19. Number of employees in each department
+SELECT department_id, COUNT(*) AS total_employees
+FROM Employee
+GROUP BY department_id;
 
-42.	Select employees and the number of projects their department is working on.
-43.	Select the departments that have no employees.
-44.	Select employee names who share the same department with 'John Doe'.
-45.	Select the department name with the highest average salary.
+20. Average salary in each department
+SELECT department_id, AVG(salary) AS average_salary
+FROM Employee
+GROUP BY department_id;
 
-Nested and Correlated Queries (10)
+21. Total salary for each department
+SELECT department_id, SUM(salary) AS total_salary
+FROM Employee
+GROUP BY department_id;
 
-46.	Select the employee with the highest salary.
- 
-47.	Select employees whose salary is above the average salary.
-48.	Select the second highest salary from the Employee table.
-49.	Select the department with the most employees.
-50.	Select employees who earn more than the average salary of their department.
-51.	Select the nth highest salary (for example, 3rd highest).
+22. Average age in each department
+SELECT department_id, AVG(age) AS average_age
+FROM Employee
+GROUP BY department_id;
 
-52.	Select employees who are older than all employees in the HR department.
-53.	Select departments where the average salary is greater than 55000.
-54.	Select employees who work in a department with at least 2 projects.
-55.	Select employees who were hired on the same date as 'Jane Smith'.
+23. Employees hired each year
+SELECT YEAR(hire_date) AS hire_year,
+COUNT(*) AS total_employees
+FROM Employee
+GROUP BY YEAR(hire_date);
 
-Combined Moderate Difficulty Queries (10)
+24. Highest salary in each department
+SELECT department_id, MAX(salary) AS highest_salary
+FROM Employee
+GROUP BY department_id;
 
-56.	Select the total salary of employees hired in the year 2020.
-57.	Select the average salary of employees in each department, ordered by the average salary in descending order.
-58.	Select departments with more than 1 employee and an average salary greater than 55000.
-59.	Select employees hired in the last 2 years, ordered by their hire date.
-60.	Select the total number of employees and the average salary for departments with more than 2 employees.
-61.	Select the name and salary of employees whose salary is above the average salary of their department.
-62.	Select the names of employees who are hired on the same date as the oldest employee in the company.
-63.	Select the department names along with the total number of projects they are working on, ordered by the number of projects.
-64.	Select the employee name with the highest salary in each department.
-
-65.	Select the names and salaries of employees who are older than the average age of employees in their department.
-
-
-
-
+25. Department with highest average salary
+SELECT department_id, AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+ORDER BY avg_salary DESC
+LIMIT 1;
 
 
 

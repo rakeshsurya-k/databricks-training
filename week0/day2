@@ -1,1 +1,289 @@
+26. Departments with more than 2 employees
+SELECT department_id, COUNT(*) AS total_employees
+FROM Employee
+GROUP BY department_id
+HAVING COUNT(*) > 2;
 
+27. Departments with average salary greater than 55000
+SELECT department_id, AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+HAVING AVG(salary) > 55000;
+
+28. Years with more than 1 employee hired
+SELECT YEAR(hire_date) AS hire_year,
+COUNT(*) AS total
+FROM Employee
+GROUP BY YEAR(hire_date)
+HAVING COUNT(*) > 1;
+
+29. Departments with total salary less than 100000
+SELECT department_id, SUM(salary) AS total_salary
+FROM Employee
+GROUP BY department_id
+HAVING SUM(salary) < 100000;
+
+30. Departments with maximum salary above 75000
+SELECT department_id, MAX(salary) AS max_salary
+FROM Employee
+GROUP BY department_id
+HAVING MAX(salary) > 75000;
+
+31. Employees ordered by salary ascending
+SELECT * FROM Employee
+ORDER BY salary ASC;
+
+32. Employees ordered by age descending
+SELECT * FROM Employee
+ORDER BY age DESC;
+
+33. Employees ordered by hire date ascending
+SELECT * FROM Employee
+ORDER BY hire_date ASC;
+
+34. Employees ordered by department then salary
+SELECT * FROM Employee
+ORDER BY department_id, salary;
+
+35. Departments ordered by total salary
+SELECT department_id, SUM(salary) AS total_salary
+FROM Employee
+GROUP BY department_id
+ORDER BY total_salary DESC;
+
+36. Employee names with department names
+SELECT e.name, d.name AS department_name
+FROM Employee e
+JOIN Department d
+ON e.department_id = d.department_id;
+
+37. Project names with department names
+SELECT p.name, d.name AS department_name
+FROM Project p
+JOIN Department d
+ON p.department_id = d.department_id;
+
+38. Employee names and corresponding project names
+SELECT e.name AS employee_name,
+p.name AS project_name
+FROM Employee e
+JOIN Project p
+ON e.department_id = p.department_id;
+
+39. All employees and their departments
+SELECT e.name, d.name AS department_name
+FROM Employee e
+LEFT JOIN Department d
+ON e.department_id = d.department_id;
+
+40. All departments and their employees
+SELECT d.name AS department_name,
+e.name AS employee_name
+FROM Department d
+LEFT JOIN Employee e
+ON d.department_id = e.department_id;
+
+41. Employees not assigned to any project
+SELECT e.name
+FROM Employee e
+LEFT JOIN Project p
+ON e.department_id = p.department_id
+WHERE p.project_id IS NULL;
+
+42. Employees and number of projects in their department
+SELECT e.name,
+COUNT(p.project_id) AS total_projects
+FROM Employee e
+LEFT JOIN Project p
+ON e.department_id = p.department_id
+GROUP BY e.emp_id, e.name;
+
+43. Departments with no employees
+SELECT d.name
+FROM Department d
+LEFT JOIN Employee e
+ON d.department_id = e.department_id
+WHERE e.emp_id IS NULL;
+
+44. Employees in same department as John Doe
+SELECT name
+FROM Employee
+WHERE department_id = (
+    SELECT department_id
+    FROM Employee
+    WHERE name = 'John Doe'
+);
+
+45. Department with highest average salary
+SELECT d.name, AVG(e.salary) AS avg_salary
+FROM Employee e
+JOIN Department d
+ON e.department_id = d.department_id
+GROUP BY d.name
+ORDER BY avg_salary DESC
+LIMIT 1;
+
+46. Employee with highest salary
+SELECT *
+FROM Employee
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM Employee
+);
+
+47. Employees earning above average salary
+SELECT *
+FROM Employee
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM Employee
+);
+
+48. Second highest salary
+SELECT DISTINCT salary
+FROM Employee
+ORDER BY salary DESC
+LIMIT 1 OFFSET 1;
+
+49. Department with most employees
+SELECT department_id, COUNT(*) AS total
+FROM Employee
+GROUP BY department_id
+ORDER BY total DESC
+LIMIT 1;
+
+50. Employees earning more than department average
+SELECT e.name, e.salary
+FROM Employee e
+WHERE e.salary > (
+    SELECT AVG(salary)
+    FROM Employee
+    WHERE department_id = e.department_id
+);
+
+51. 3rd highest salary
+SELECT DISTINCT salary
+FROM Employee
+ORDER BY salary DESC
+LIMIT 1 OFFSET 2;
+
+52. Employees older than all HR employees
+SELECT *
+FROM Employee
+WHERE age > ALL (
+    SELECT age
+    FROM Employee
+    WHERE department_id = (
+        SELECT department_id
+        FROM Department
+        WHERE name = 'HR'
+    )
+);
+
+53. Departments where average salary > 55000
+SELECT department_id
+FROM Employee
+GROUP BY department_id
+HAVING AVG(salary) > 55000;
+
+54. Employees working in departments with at least 2 projects
+SELECT name
+FROM Employee
+WHERE department_id IN (
+    SELECT department_id
+    FROM Project
+    GROUP BY department_id
+    HAVING COUNT(*) >= 2
+);
+
+55. Employees hired same date as Jane Smith
+SELECT *
+FROM Employee
+WHERE hire_date = (
+    SELECT hire_date
+    FROM Employee
+    WHERE name = 'Jane Smith'
+);
+
+56. Total salary of employees hired in 2020
+SELECT SUM(salary) AS total_salary
+FROM Employee
+WHERE YEAR(hire_date) = 2020;
+
+57. Average salary by department ordered descending
+SELECT department_id,
+AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+ORDER BY avg_salary DESC;
+
+58. Departments with >1 employee and avg salary >55000
+SELECT department_id,
+COUNT(*) AS total_employees,
+AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+HAVING COUNT(*) > 1
+AND AVG(salary) > 55000;
+
+59. Employees hired in last 2 years ordered by hire date
+SELECT *
+FROM Employee
+WHERE hire_date >= DATE_SUB(CURDATE(), INTERVAL 2 YEAR)
+ORDER BY hire_date;
+
+60. Total employees and avg salary for departments with >2 employees
+SELECT department_id,
+COUNT(*) AS total_employees,
+AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+HAVING COUNT(*) > 2;
+
+61. Employees with salary above department average
+SELECT name, salary
+FROM Employee e
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM Employee
+    WHERE department_id = e.department_id
+);
+
+62. Employees hired on same date as oldest employee
+SELECT name
+FROM Employee
+WHERE hire_date = (
+    SELECT hire_date
+    FROM Employee
+    ORDER BY age DESC
+    LIMIT 1
+);
+
+63. Department names with total projects
+SELECT d.name,
+COUNT(p.project_id) AS total_projects
+FROM Department d
+LEFT JOIN Project p
+ON d.department_id = p.department_id
+GROUP BY d.name
+ORDER BY total_projects DESC;
+
+64. Employee with highest salary in each department
+SELECT e.department_id,
+e.name,
+e.salary
+FROM Employee e
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM Employee
+    WHERE department_id = e.department_id
+);
+
+65. Employees older than department average age
+SELECT name, salary
+FROM Employee e
+WHERE age > (
+    SELECT AVG(age)
+    FROM Employee
+    WHERE department_id = e.department_id
+);

@@ -1,0 +1,650 @@
+# SQL Queries Theory, Examples, and Explanations
+
+# Introduction
+
+This guide explains the theory behind SQL queries used in the Employee Database project.
+
+The database contains three tables:
+
+* Department
+* Employee
+* Project
+
+The explanations cover:
+
+1. Basic SELECT Queries
+2. String Matching Queries
+3. Date Queries
+4. Aggregate Functions
+5. GROUP BY Queries
+6. HAVING Clause Queries
+7. ORDER BY Queries
+8. JOIN Queries
+9. Nested and Correlated Queries
+10. Combined Queries
+
+---
+
+# 1. Basic SELECT Queries
+
+Basic queries are used to retrieve data from tables.
+
+## Syntax
+
+```sql
+SELECT column_name
+FROM table_name;
+```
+
+## Example
+
+```sql
+SELECT name, salary
+FROM Employee;
+```
+
+## Explanation
+
+* SELECT is used to choose columns.
+* FROM specifies the table.
+* This query displays only the employee name and salary.
+
+## Another Example
+
+```sql
+SELECT *
+FROM Employee;
+```
+
+### Explanation
+
+* `*` means all columns.
+* Displays complete employee information.
+
+---
+
+# 2. WHERE Clause
+
+The WHERE clause filters rows based on conditions.
+
+## Syntax
+
+```sql
+SELECT column_name
+FROM table_name
+WHERE condition;
+```
+
+## Example
+
+```sql
+SELECT name
+FROM Employee
+WHERE age > 30;
+```
+
+## Explanation
+
+* Retrieves employees older than 30.
+* Only rows satisfying the condition are returned.
+
+## Common Operators
+
+| Operator | Meaning               |
+| -------- | --------------------- |
+| =        | Equal                 |
+| >        | Greater than          |
+| <        | Less than             |
+| >=       | Greater than or equal |
+| <=       | Less than or equal    |
+| !=       | Not equal             |
+
+---
+
+# 3. String Matching Queries
+
+String matching is performed using the LIKE operator.
+
+## Syntax
+
+```sql
+SELECT column_name
+FROM table_name
+WHERE column_name LIKE pattern;
+```
+
+## Wildcards
+
+| Wildcard | Meaning                  |
+| -------- | ------------------------ |
+| %        | Any number of characters |
+| _        | Single character         |
+
+---
+
+## Example 1: Names starting with J
+
+```sql
+SELECT *
+FROM Employee
+WHERE name LIKE 'J%';
+```
+
+### Explanation
+
+* J% means names beginning with J.
+* Example: John, Jane.
+
+---
+
+## Example 2: Names ending with e
+
+```sql
+SELECT *
+FROM Employee
+WHERE name LIKE '%e';
+```
+
+### Explanation
+
+* %e means names ending with e.
+
+---
+
+## Example 3: Names containing a
+
+```sql
+SELECT *
+FROM Employee
+WHERE name LIKE '%a%';
+```
+
+### Explanation
+
+* Finds names containing the letter a anywhere.
+
+---
+
+## Example 4: Second character is o
+
+```sql
+SELECT *
+FROM Employee
+WHERE name LIKE '_o%';
+```
+
+### Explanation
+
+* `_` represents one character.
+* Finds names where second character is o.
+
+---
+
+# 4. Date Queries
+
+Date functions help retrieve records based on dates.
+
+## YEAR() Function
+
+Extracts year from a date.
+
+### Example
+
+```sql
+SELECT *
+FROM Employee
+WHERE YEAR(hire_date) = 2020;
+```
+
+### Explanation
+
+* Retrieves employees hired in 2020.
+
+---
+
+## MONTH() Function
+
+Extracts month from a date.
+
+### Example
+
+```sql
+SELECT *
+FROM Employee
+WHERE MONTH(hire_date) = 1;
+```
+
+### Explanation
+
+* Finds employees hired in January.
+
+---
+
+## Date Comparison
+
+### Example
+
+```sql
+SELECT *
+FROM Employee
+WHERE hire_date >= '2021-03-01';
+```
+
+### Explanation
+
+* Retrieves employees hired on or after March 1, 2021.
+
+---
+
+# 5. Aggregate Functions
+
+Aggregate functions perform calculations on multiple rows.
+
+| Function | Purpose       |
+| -------- | ------------- |
+| SUM()    | Total value   |
+| AVG()    | Average value |
+| MIN()    | Minimum value |
+| MAX()    | Maximum value |
+| COUNT()  | Count rows    |
+
+---
+
+## SUM()
+
+### Example
+
+```sql
+SELECT SUM(salary)
+FROM Employee;
+```
+
+### Explanation
+
+* Calculates total salary of all employees.
+
+---
+
+## AVG()
+
+### Example
+
+```sql
+SELECT AVG(salary)
+FROM Employee;
+```
+
+### Explanation
+
+* Calculates average salary.
+
+---
+
+## MIN()
+
+### Example
+
+```sql
+SELECT MIN(salary)
+FROM Employee;
+```
+
+### Explanation
+
+* Finds lowest salary.
+
+---
+
+## MAX()
+
+### Example
+
+```sql
+SELECT MAX(salary)
+FROM Employee;
+```
+
+### Explanation
+
+* Finds highest salary.
+
+---
+
+## COUNT()
+
+### Example
+
+```sql
+SELECT COUNT(*)
+FROM Employee;
+```
+
+### Explanation
+
+* Counts total employees.
+
+---
+
+# 6. GROUP BY Clause
+
+GROUP BY groups rows having similar values.
+
+## Syntax
+
+```sql
+SELECT column_name, aggregate_function(column_name)
+FROM table_name
+GROUP BY column_name;
+```
+
+## Example
+
+```sql
+SELECT department_id, AVG(salary)
+FROM Employee
+GROUP BY department_id;
+```
+
+## Explanation
+
+* Groups employees by department.
+* Calculates average salary for each department.
+
+---
+
+# 7. HAVING Clause
+
+HAVING filters grouped data.
+
+## Difference Between WHERE and HAVING
+
+| WHERE                | HAVING              |
+| -------------------- | ------------------- |
+| Filters rows         | Filters groups      |
+| Used before GROUP BY | Used after GROUP BY |
+
+---
+
+## Example
+
+```sql
+SELECT department_id, AVG(salary)
+FROM Employee
+GROUP BY department_id
+HAVING AVG(salary) > 55000;
+```
+
+## Explanation
+
+* Shows departments where average salary is greater than 55000.
+
+---
+
+# 8. ORDER BY Clause
+
+ORDER BY sorts records.
+
+## Syntax
+
+```sql
+SELECT column_name
+FROM table_name
+ORDER BY column_name ASC;
+```
+
+---
+
+## Ascending Order
+
+```sql
+SELECT *
+FROM Employee
+ORDER BY salary ASC;
+```
+
+### Explanation
+
+* Sorts employees from lowest salary to highest salary.
+
+---
+
+## Descending Order
+
+```sql
+SELECT *
+FROM Employee
+ORDER BY age DESC;
+```
+
+### Explanation
+
+* Sorts employees from highest age to lowest age.
+
+---
+
+# 9. JOIN Queries
+
+JOIN combines rows from multiple tables.
+
+## Types of JOIN
+
+| JOIN Type  | Purpose                   |
+| ---------- | ------------------------- |
+| INNER JOIN | Matching rows only        |
+| LEFT JOIN  | All left table rows       |
+| RIGHT JOIN | All right table rows      |
+| FULL JOIN  | All rows from both tables |
+
+---
+
+# INNER JOIN
+
+## Example
+
+```sql
+SELECT e.name, d.name
+FROM Employee e
+JOIN Department d
+ON e.department_id = d.department_id;
+```
+
+## Explanation
+
+* Combines Employee and Department tables.
+* Displays employee names with department names.
+
+---
+
+# LEFT JOIN
+
+## Example
+
+```sql
+SELECT d.name, e.name
+FROM Department d
+LEFT JOIN Employee e
+ON d.department_id = e.department_id;
+```
+
+## Explanation
+
+* Displays all departments.
+* Also displays employees if available.
+* Departments without employees still appear.
+
+---
+
+# 10. Subqueries
+
+A subquery is a query inside another query.
+
+## Example
+
+```sql
+SELECT *
+FROM Employee
+WHERE salary = (
+    SELECT MAX(salary)
+    FROM Employee
+);
+```
+
+## Explanation
+
+* Inner query finds maximum salary.
+* Outer query finds employee with that salary.
+
+---
+
+# 11. Correlated Subqueries
+
+Correlated subqueries depend on outer query values.
+
+## Example
+
+```sql
+SELECT e.name, e.salary
+FROM Employee e
+WHERE e.salary > (
+    SELECT AVG(salary)
+    FROM Employee
+    WHERE department_id = e.department_id
+);
+```
+
+## Explanation
+
+* Calculates department average salary.
+* Finds employees earning above department average.
+
+---
+
+# 12. Nested Queries
+
+Nested queries help solve complex problems.
+
+## Example: Second Highest Salary
+
+```sql
+SELECT DISTINCT salary
+FROM Employee
+ORDER BY salary DESC
+LIMIT 1 OFFSET 1;
+```
+
+## Explanation
+
+* Sorts salaries in descending order.
+* OFFSET 1 skips highest salary.
+* Returns second highest salary.
+
+---
+
+# 13. Combined Queries
+
+Combined queries use multiple SQL concepts together.
+
+## Example
+
+```sql
+SELECT department_id,
+COUNT(*) AS total_employees,
+AVG(salary) AS avg_salary
+FROM Employee
+GROUP BY department_id
+HAVING COUNT(*) > 1;
+```
+
+## Explanation
+
+This query uses:
+
+* GROUP BY
+* COUNT()
+* AVG()
+* HAVING
+
+It finds departments having more than one employee.
+
+---
+
+# 14. SQL Execution Order
+
+SQL queries are internally executed in this order:
+
+1. FROM
+2. WHERE
+3. GROUP BY
+4. HAVING
+5. SELECT
+6. ORDER BY
+
+---
+
+# 15. Important SQL Concepts
+
+## Primary Key
+
+* Uniquely identifies each row.
+* Example: emp_id.
+
+## Foreign Key
+
+* Creates relationship between tables.
+* Example: department_id in Employee table.
+
+## NULL Values
+
+* Represents missing or unknown data.
+
+## Aliases
+
+Used to give temporary names.
+
+### Example
+
+```sql
+SELECT name AS employee_name
+FROM Employee;
+```
+
+---
+
+# 16. Advantages of SQL
+
+* Easy to learn
+* Fast data retrieval
+* Powerful data analysis
+* Supports large databases
+* Used in real-world applications
+
+---
+
+# 17. Real World Uses of SQL
+
+SQL is used in:
+
+* Banking systems
+* College management systems
+* E-commerce websites
+* Hospital databases
+* Employee management systems
+* Social media applications
+
+---
+
+# Conclusion
+
+This project helps in understanding:
+
+* SQL syntax
+* Data retrieval
+* Filtering
+* Joins
+* Aggregation
+* Grouping
+* Subqueries
+* Database relationships
+* Real-world database operations
+
+Practicing these queries improves database programming and problem-solving skills.

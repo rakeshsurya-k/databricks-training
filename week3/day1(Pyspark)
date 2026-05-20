@@ -1,1 +1,5 @@
 link-https://dbc-8b879353-7a3a.cloud.databricks.com/editor/notebooks/3409597793267015?o=7474649398564296
+read file:
+df = spark.read.format("csv").option('header', True).option('inferschema', True).load("/Volumes/workspace/default/datadricks2027/Big Sales.csv")
+
+df.display()
